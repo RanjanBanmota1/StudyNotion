@@ -24,9 +24,8 @@ app.use(cookieParser());
 app.use(
 	cors({
 		origin:[
-		"http://localhost:5173",
-		"http://localhost:5174", 
-		"https://study-notion-two-ochre.vercel.app/"
+		    origin: true, // Allow all origins temporarily
+    		    credentials: true,
 	],
 		
 		credentials:true,
