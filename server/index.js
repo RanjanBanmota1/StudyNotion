@@ -22,14 +22,14 @@ database.connect();
 app.use(express.json());
 app.use(cookieParser());
 app.use(
-	cors({
-		origin:[
-		    origin: true, // Allow all origins temporarily
-    		    credentials: true,
-	],
-		
-		credentials:true,
-	})
+  cors({
+    origin: [
+      "https://study-notion-two-ochre.vercel.app",
+      "http://localhost:5173", // (optional, for local dev)
+      "http://localhost:5174"  // (optional, for local dev)
+    ],
+    credentials: true,
+  })
 )
 
 app.use(
