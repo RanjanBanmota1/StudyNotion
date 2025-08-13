@@ -114,8 +114,12 @@ exports.createCourse = async (req, res) => {
       { new: true }
     )
     // Add the new course to the Categories
+    console.log("🔍 Debug: category from req.body:", category);
+    console.log("🔍 Debug: categoryDetails._id:", categoryDetails._id);
+    console.log("🔍 Debug: newCourse._id:", newCourse._id);
+    
     const categoryDetails2 = await Category.findByIdAndUpdate(
-      { _id: category },
+      { _id: categoryDetails._id }, // Use the verified category ID
       {
         $push: {
           course: newCourse._id,
