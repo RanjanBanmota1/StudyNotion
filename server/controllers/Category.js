@@ -38,7 +38,31 @@ exports.showAllCategories = async (req, res)=>{
     try{
         console.log("inside show all categories");
 
+        // Get all categories with their courses
         const allCategories = await Category.find({}).populate("course");
+        
+        // Also get categories with only published courses for comparison
+        const categoriesWithPublishedCourses = await Category.find({}).populate({
+            path: "course",
+            match: { status: "Published" }
+        });
+        
+        console.log("🔍 Debug: Categories found:", allCategories.length);
+        console.log("🔍 Debug: Categories with published courses:", categoriesWithPublishedCourses.length);
+        
+        allCategories.forEach(cat => {
+            console.log(`  - ${cat.name}: ${cat.course.length} total courses`);
+            if (cat.course.length > 0) {
+                cat.course.forEach(course => {
+                    console.log(`    * ${course.courseName} (Status: ${course.status})`);
+                });
+            }
+        });
+        
+        console.log("\n🔍 Debug: Categories with ONLY published courses:");
+        categoriesWithPublishedCourses.forEach(cat => {
+            console.log(`  - ${cat.name}: ${cat.course.length} published courses`);
+        });
 
         res.status(200).json({
             success:true,

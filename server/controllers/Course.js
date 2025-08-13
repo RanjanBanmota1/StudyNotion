@@ -74,13 +74,23 @@ exports.createCourse = async (req, res) => {
     }
 
     // Check if the tag given is valid
+    console.log("🔍 Debug: Category ID type:", typeof category);
+    console.log("🔍 Debug: Category ID value:", category);
+    
     const categoryDetails = await Category.findById(category)
     if (!categoryDetails) {
+      console.log("❌ Error: Category not found with ID:", category);
       return res.status(404).json({
         success: false,
         message: "Category Details Not Found",
       })
     }
+    
+    console.log("🔍 Debug: Found category:", {
+      _id: categoryDetails._id,
+      name: categoryDetails.name,
+      courseCount: categoryDetails.course.length
+    });
     // Upload the Thumbnail to Cloudinary
     const thumbnailImage = await uploadImageToCloudinary(
       thumbnail,
@@ -88,6 +98,8 @@ exports.createCourse = async (req, res) => {
     )
     console.log(thumbnailImage)
     // Create a new course with the given details
+    console.log("🔍 Debug: Course status being set to:", status);
+    
     const newCourse = await Course.create({
       courseName,
       courseDescription,
@@ -100,6 +112,13 @@ exports.createCourse = async (req, res) => {
       status: status,
       instructions,
     })
+    
+    console.log("🔍 Debug: Course created successfully:", {
+      _id: newCourse._id,
+      name: newCourse.courseName,
+      status: newCourse.status,
+      category: newCourse.category
+    });
 
     // Add the new course to the User Schema of the Instructor
     await User.findByIdAndUpdate(
@@ -118,16 +137,51 @@ exports.createCourse = async (req, res) => {
     console.log("🔍 Debug: categoryDetails._id:", categoryDetails._id);
     console.log("🔍 Debug: newCourse._id:", newCourse._id);
     
-    const categoryDetails2 = await Category.findByIdAndUpdate(
-      { _id: categoryDetails._id }, // Use the verified category ID
-      {
-        $push: {
-          course: newCourse._id,
+    // Check if category exists before update
+    const categoryBeforeUpdate = await Category.findById(categoryDetails._id);
+    console.log("🔍 Debug: Category before update:", {
+      _id: categoryBeforeUpdate._id,
+      name: categoryBeforeUpdate.name,
+      courseCount: categoryBeforeUpdate.course.length,
+      courses: categoryBeforeUpdate.course
+    });
+    
+    try {
+      const categoryDetails2 = await Category.findByIdAndUpdate(
+        { _id: categoryDetails._id }, // Use the verified category ID
+        {
+          $push: {
+            course: newCourse._id,
+          },
         },
-      },
-      { new: true }
-    )
-    console.log("HEREEEEEEEE", categoryDetails2)
+        { new: true }
+      )
+      
+      if (!categoryDetails2) {
+        console.log("❌ Error: Category update failed - no result returned!");
+        throw new Error("Category update failed");
+      }
+      
+      console.log("🔍 Debug: Category after update:", {
+        _id: categoryDetails2._id,
+        name: categoryDetails2.name,
+        courseCount: categoryDetails2.course.length,
+        courses: categoryDetails2.course
+      });
+      
+      // Verify the update actually happened
+      if (categoryDetails2.course.length !== categoryBeforeUpdate.course.length + 1) {
+        console.log("❌ Error: Course count mismatch!");
+        console.log("Expected:", categoryBeforeUpdate.course.length + 1);
+        console.log("Actual:", categoryDetails2.course.length);
+      } else {
+        console.log("✅ Success: Course added to category!");
+      }
+      
+    } catch (updateError) {
+      console.log("❌ Error updating category:", updateError);
+      throw updateError;
+    }
     // Return the new course and a success message
     res.status(200).json({
       success: true,
