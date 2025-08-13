@@ -38,7 +38,7 @@ exports.showAllCategories = async (req, res)=>{
     try{
         console.log("inside show all categories");
 
-        const allCategories = await Category.find({});
+        const allCategories = await Category.find({}).populate("course");
 
         res.status(200).json({
             success:true,
