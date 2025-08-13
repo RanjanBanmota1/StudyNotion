@@ -143,7 +143,7 @@ exports.createCourse = async (req, res) => {
       _id: categoryBeforeUpdate._id,
       name: categoryBeforeUpdate.name,
       courseCount: categoryBeforeUpdate.course.length,
-      courses: categoryBeforeUpdate.course
+      course: categoryBeforeUpdate.course
     });
     
     try {
@@ -166,7 +166,7 @@ exports.createCourse = async (req, res) => {
         _id: categoryDetails2._id,
         name: categoryDetails2.name,
         courseCount: categoryDetails2.course.length,
-        courses: categoryDetails2.course
+        course: categoryDetails2.course
       });
       
       // Verify the update actually happened
