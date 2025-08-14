@@ -4,4 +4,11 @@ import tailwindConfig from '@tailwindcss/vite';
 
 export default defineConfig({
   plugins: [react(), tailwindConfig()],
+  server: {
+    historyApiFallback: {
+      rewrites: [
+        { from: /.*/, to: '/index.html' },
+      ],
+    },
+  },
 });
