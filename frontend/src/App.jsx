@@ -7,7 +7,10 @@ import Navbar from './components/common/Navbar'
 // import OpenRoute from './components/common/OpenRoute'
 import Signup from './pages/Signup'
 import Login from './pages/Login'
-
+import Catalog from './pages/Catalog'
+import ForgotPassword from './pages/ForgotPassword'
+import About from './pages/About'
+import VerifyOtp from './pages/VerifyOtp'
 
 function App() {
 
@@ -25,7 +28,7 @@ function App() {
               <Signup />
           }
         />
-    <Route
+          <Route
           path="login"
           element={
 
@@ -33,7 +36,29 @@ function App() {
 
           }
         />
+
+          <Route
+          path="catalog/:catalogName" element={
+              <Catalog />
+            } 
+          />
+
+            <Route
+              path = "forgot-password"
+              element = {<ForgotPassword />}
+            />
+
+            <Route
+              path = "about"
+              element = {<About />}
+            />
+
+            <Route
+              path = "verify-email"
+              element = {<VerifyOtp/>}
+            />
         </Routes>
+        
         
       </div>  
     </>
