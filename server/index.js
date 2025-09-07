@@ -26,6 +26,7 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: [
+       "https://study-notion-393qk17ff-ranjanbanmota1s-projects.vercel.app",
       "https://study-notion-two-ochre.vercel.app",
       "http://localhost:5173", // (optional, for local dev)
       "http://localhost:5174"  // (optional, for local dev)
